@@ -3,229 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafarBot — AI Travel Assistant</title>
+  <title>SafarBot — Coming Soon</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollreveal/4.0.9/scrollreveal.min.js"></script>
-  <script src="https://unpkg.com/three@0.153.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/globe.gl"></script>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
+    body {
       font-family: 'Inter', sans-serif;
-      transition: background-color 0.3s, color 0.3s;
+    }
+    .glow-text {
+      background: linear-gradient(90deg, #3b82f6, #9333ea, #14b8a6);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 6s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .countdown {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+    .glow-btn {
+      box-shadow: 0 0 20px rgba(59,130,246,0.6);
+      transition: all 0.3s;
+    }
+    .glow-btn:hover {
+      box-shadow: 0 0 30px rgba(59,130,246,0.9);
+      transform: scale(1.05);
     }
     #particles-js {
       position: fixed;
-      width: 100vw;
-      height: 100vh;
-      top: 0;
-      left: 0;
-      z-index: -2;
-      pointer-events: none;
-    }
-    #globeViz {
-      width: 100%;
-      height: 400px;
-      margin: 0 auto;
-      z-index: 1;
-    }
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      margin: 0 auto 12px;
-    }
-    .mode-toggle {
-      cursor: pointer;
+      top:0; left:0; width:100%; height:100%;
+      z-index:-1;
     }
   </style>
 </head>
-<body class="text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900">
+<body class="bg-gray-900 text-white flex flex-col justify-center items-center h-screen text-center">
 
   <div id="particles-js"></div>
+
+  <h1 class="text-6xl md:text-7xl font-extrabold glow-text mb-6">SafarBot</h1>
+  <p class="text-lg md:text-xl text-gray-300 max-w-xl mx-auto mb-10">Your AI-powered travel companion is almost here. Smarter trips. Better prices. Seamless booking.</p>
+  
+  <!-- Countdown -->
+  <div id="countdown" class="countdown mb-10"></div>
+
+  <!-- Waitlist Form -->
+  <form action="https://your-mailchimp-url.com" method="POST" class="flex flex-col md:flex-row gap-4 justify-center">
+    <input type="email" name="EMAIL" placeholder="Enter your email" 
+      class="px-5 py-3 rounded-md text-gray-800 w-72" required />
+    <button type="submit" 
+      class="glow-btn bg-blue-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition">
+      Join Waitlist
+    </button>
+  </form>
+
+  <footer class="absolute bottom-6 text-xs text-gray-400">© 2025 SafarBot. Made with ❤️ for smart travelers.</footer>
+
   <script>
-    function loadParticles(isDark) {
-      particlesJS('particles-js', {
-        particles: {
-          number: { value: 100 },
-          color: { value: isDark ? '#3b82f6' : '#ffffff' },
-          shape: { type: 'circle' },
-          opacity: { value: 0.2 },
-          size: { value: 3 },
-          line_linked: {
-            enable: true,
-            distance: 150,
-            color: isDark ? '#3b82f6' : '#ffffff',
-            opacity: 0.2,
-            width: 1
-          },
-          move: {
-            enable: true,
-            speed: 1.5,
-            direction: 'none',
-            random: true,
-            out_mode: 'bounce'
-          }
-        },
-        interactivity: {
-          detect_on: 'canvas',
-          events: {
-            onhover: { enable: true, mode: 'grab' },
-            onclick: { enable: true, mode: 'push' }
-          },
-          modes: {
-            grab: { distance: 140, line_linked: { opacity: 0.3 } },
-            push: { particles_nb: 4 }
-          }
-        },
-        retina_detect: true
-      });
-    }
+    // Countdown timer
+    const launchDate = new Date("2025-12-31T00:00:00").getTime();
+    const timer = setInterval(function() {
+      const now = new Date().getTime();
+      const diff = launchDate - now;
+      if (diff <= 0) {
+        document.getElementById("countdown").innerHTML = "We are live!";
+        clearInterval(timer);
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById("countdown").innerHTML = 
+          `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+    }, 1000);
 
-    function resetParticles(isDark) {
-      const particlesCanvas = document.querySelector('#particles-js canvas');
-      if (particlesCanvas) particlesCanvas.remove();
-      loadParticles(isDark);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      loadParticles(document.documentElement.classList.contains('dark'));
+    // Particles
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80 },
+        size: { value: 3 },
+        move: { speed: 1.2 },
+        line_linked: { enable: true, distance: 150, color: "#3b82f6", opacity: 0.3 },
+        color: { value: "#ffffff" }
+      },
+      interactivity: {
+        events: { onhover: { enable: true, mode: "repulse" } },
+      }
     });
-
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-      resetParticles(document.documentElement.classList.contains('dark'));
-    }
   </script>
-
-  <header class="sticky top-0 bg-white dark:bg-gray-900 shadow-md z-50">
-    <div class="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
-      <h1 class="text-xl font-bold text-blue-700 dark:text-blue-400">SafarBot</h1>
-<!--       <div class="space-x-4">
-        <button onclick="toggleDarkMode()" class="text-sm px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 mode-toggle">Toggle Mode</button>
-        <a href="#waitlist" class="bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition text-sm md:text-base">Get Early Access</a>
-      </div> -->
-    </div>
-  </header>
-
-  <section class="text-center py-20 px-4 bg-gray-50 dark:bg-gray-900" id="hero">
-    <h2 class="text-5xl md:text-7xl font-extrabold text-blue-800 dark:text-blue-300 mb-4">Smarter Travel. Powered by AI.</h2>
-    <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-8">Your next trip is just a message away. Plan, book, and explore with the power of artificial intelligence.</p>
-    <form id="waitlist" action="https://your-mailchimp-url.com" method="POST" class="flex flex-col md:flex-row justify-center items-center gap-4 max-w-md mx-auto">
-      <input type="email" name="EMAIL" placeholder="Enter your email" class="px-4 py-3 rounded-md border w-full text-sm md:text-base" required style="color:black" />
-    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition text-sm md:text-base" style="width:200px">Get Notified</button>
-    </form>
-  </section>
-
-  <section class="text-center bg-white dark:bg-gray-800 py-10">
-    <h3 class="text-3xl font-bold mb-4 text-blue-700 dark:text-blue-400">Explore the World with Our Globe</h3>
-    <div id="globeViz"></div>
-    <script>
-      // Cities including India and Saudi Arabia
-      const cities = [
-        { name: "New York", lat: 40.7128, lng: -74.0060, color: "red" },
-        { name: "London", lat: 51.5074, lng: -0.1278, color: "yellow" },
-        { name: "Tokyo", lat: 35.6895, lng: 139.6917, color: "lime" },
-        { name: "Sydney", lat: -33.8688, lng: 151.2093, color: "cyan" },
-        { name: "Paris", lat: 48.8566, lng: 2.3522, color: "magenta" },
-        { name: "Dubai", lat: 25.2048, lng: 55.2708, color: "orange" },
-        { name: "Singapore", lat: 1.3521, lng: 103.8198, color: "blue" },
-        { name: "Cape Town", lat: -33.9249, lng: 18.4241, color: "green" },
-        { name: "Rio de Janeiro", lat: -22.9068, lng: -43.1729, color: "purple" },
-        { name: "Toronto", lat: 43.6532, lng: -79.3832, color: "pink" },
-        { name: "Mumbai", lat: 19.0760, lng: 72.8777, color: "gold" }, // India
-        { name: "Riyadh", lat: 24.7136, lng: 46.6753, color: "brown" } // Saudi Arabia
-      ];
-
-      // Flights including India and Saudi Arabia
-      const flights = [
-        { startLat: 40.7128, startLng: -74.0060, endLat: 35.6895, endLng: 139.6917, color: "orange" }, // NY-Tokyo
-        { startLat: 51.5074, startLng: -0.1278, endLat: 48.8566, endLng: 2.3522, color: "yellow" }, // London-Paris
-        { startLat: 25.2048, startLng: 55.2708, endLat: 1.3521, endLng: 103.8198, color: "blue" }, // Dubai-Singapore
-        { startLat: -33.8688, startLng: 151.2093, endLat: -22.9068, endLng: -43.1729, color: "lime" }, // Sydney-Rio
-        { startLat: 43.6532, startLng: -79.3832, endLat: 51.5074, endLng: -0.1278, color: "red" }, // Toronto-London
-        { startLat: 48.8566, startLng: 2.3522, endLat: -33.9249, endLng: 18.4241, color: "green" }, // Paris-Cape Town
-        { startLat: 35.6895, startLng: 139.6917, endLat: 25.2048, endLng: 55.2708, color: "magenta" }, // Tokyo-Dubai
-        { startLat: 19.0760, startLng: 72.8777, endLat: 24.7136, endLng: 46.6753, color: "gold" }, // Mumbai-Riyadh
-        { startLat: 24.7136, startLng: 46.6753, endLat: 51.5074, endLng: -0.1278, color: "brown" } // Riyadh-London
-      ];
-
-      const globeEl = document.getElementById('globeViz');
-      const world = Globe()(globeEl)
-        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-        .backgroundColor('rgba(0,0,0,0)')
-        .width(window.innerWidth)
-        .height(400)
-        .showAtmosphere(true)
-        .atmosphereColor("#3a9bdc")
-        .pointsData(cities)
-        .pointLat('lat')
-        .pointLng('lng')
-        .pointColor('color')
-        .pointAltitude(0.05)
-        .pointRadius(0.6)
-        .pointLabel('name')
-        .arcsData(flights)
-        .arcStartLat('startLat')
-        .arcStartLng('startLng')
-        .arcEndLat('endLat')
-        .arcEndLng('endLng')
-        .arcColor('color')
-        .arcDashLength(0.4)
-        .arcDashGap(0.2)
-        .arcDashInitialGap(() => Math.random())
-        .arcDashAnimateTime(2000)
-        .onGlobeReady(() => {
-          window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') world.controls().rotateLeft(0.05);
-            if (e.key === 'ArrowRight') world.controls().rotateRight(0.05);
-            if (e.key === 'ArrowUp') world.controls().rotateUp(0.05);
-            if (e.key === 'ArrowDown') world.controls().rotateDown(0.05);
-          });
-          world.controls().enableZoom = true;
-          world.controls().enablePan = true;
-          world.controls().enableDamping = true;
-        });
-
-      globeEl.addEventListener('mousedown', function (event) {
-        const rect = globeEl.getBoundingClientRect();
-        const mouse = {
-          x: ((event.clientX - rect.left) / rect.width) * 2 - 1,
-          y: -((event.clientY - rect.top) / rect.height) * 2 + 1
-        };
-        const camera = world.camera();
-        const scene = world.scene();
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        if (intersects.length) {
-          const point = intersects[0].point;
-          const lat = 90 - (Math.acos(point.y / world.getGlobeRadius()) * 180 / Math.PI);
-          const lng = ((Math.atan2(point.z, point.x) * 180 / Math.PI) + 180) % 360 - 180;
-          
-        }
-      });
-    </script>
-  </section>
-
-  <footer class="text-center py-6 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900">
-    © 2025 SafarBot | AI for Smart Travelers <br />
-    <a href="#" class="hover:underline">Privacy Policy</a> • <a href="#" class="hover:underline">Terms</a> • <a href="#" class="hover:underline">Contact</a>
-    <p class="mt-2 text-xs">Made with ❤️ by UJ Innovations</p>
-  </footer>
-
-<script data-noptimize="1" data-cfasync="false" data-wpfc-render="false">
-  (function () {
-      var script = document.createElement("script");
-      script.async = 1;
-      script.src = 'https://emrld.cc/NDUyMDI4.js?t=452028';
-      document.head.appendChild(script);
-  })();
-</script>
-
 </body>
 </html>
